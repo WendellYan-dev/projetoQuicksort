@@ -1,52 +1,46 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//no quicksort lomuto o pivo será o último índice da lista
+int particionaLomuto(int lista[],int inicio,int fim) {
 
-void particiona(int *lista,int inicio,int fim) {
-    //
-    int pivo = (lista[inicio]+lista[fim]+lista[(inicio+fim)/2])/3;
-    while(inicio<fim){
-        while(inicio<fim && lista[inicio]<=pivo){
-            inicio++;
+    int pivo = lista[fim];
+    int i = inicio;
+    for(int j = inicio;j < fim;j++){
+        if(lista[j]<=pivo){
+            int aux = lista[i];
+            lista[i] = lista[j];
+            lista[j] = aux;
+            i++;
         }
-        while(inicio<fim && lista[fim]>pivo){
-            fim--;
-        }
-        int aux = lista[inicio];
-        lista[inicio] =lista[fim];
-        lista[fim] = aux;
     }
-    return inicio;
+    int aux = lista[i];
+    lista[i] = lista[fim];
+    lista[fim] = aux;
+    return i;
 }
 
-//deve ser fim-1
-void quicksort(int *lista,int inicio,int fim){
+
+void quicksortLomuto(int lista[],int inicio,int fim){
     if(inicio<fim){
-        int posicao = particiona(lista,inicio,fim);
+        int posicao = particionaLomuto(lista,inicio,fim);
         //sublista da esquerda
-        quicksort(lista,inicio,posicao-1);
+        quicksortLomuto(lista,inicio,posicao-1);
         //sublista da direita
-        quicksort(lista,posicao+1,fim);
+        quicksortLomuto(lista,posicao+1,fim);
     }
 }
 
 int main() {
 
-    int *lista = (int*)malloc(sizeof(int)*8);
-    lista[0] = 3;
-    lista[1] = 5;
-    lista[2] = 8;
-    lista[3] = 1;
-    lista[4] = 2;
-    lista[5] = 4;
-    lista[6] = 7;
-    lista[7] = 6;
-    int tam = 8;
-    quicksort(lista,0,tam-1);
-    printf("Lista ordenada: ");
-    for(int i = 0; i < tam; i++){
-        printf("%d ",lista[i]);
+    int lista[] = {9, 7 , 4, 23 , 10, -5};
+    int tamanho = sizeof(lista)/sizeof(lista[0]);
+
+    quicksortLomuto(lista, 0 ,tamanho-1);
+    for(int i = 0;i<tamanho;i++){
+    printf(" %d ",lista[i]);
     }
+
 
     return 0;
 }

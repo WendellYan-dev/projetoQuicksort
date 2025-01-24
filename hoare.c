@@ -1,65 +1,56 @@
 #include <stdio.h>
 
-int particionarHoare(int arr[], int inicio, int fim) {
-    int pivo = arr[inicio]; //Escolhe o primeiro elemento como pivô
+//essa estruturs quicksort escolhe o primeiro elemento da lista como pivo
+int particionarHoare(int lista[], int inicio, int fim) {
+    int pivo = lista[inicio]; 
     int i = inicio - 1;     
     int j = fim + 1;        
 
     while (1) {
-        // Avança o índice esquerdo até encontrar um elemento maior ou igual ao pivô
         do {
             i++;
-        } while (arr[i] < pivo);
-        // Retrocede o índice direito até encontrar um elemento menor ou igual ao pivô
+        } while (lista[i] < pivo);
         do {
             j--;
-        } while (arr[j] > pivo);
-        // Se os índices se cruzaram, retorna o ponto de partição
+        } while (lista[j] > pivo);
         if (i < j) {
-        int temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
+        int temp = lista[i];
+        lista[i] = lista[j];
+        lista[j] = temp;
         } else {
             return j;
         }
     }
 }
 
-// Função QuickSort recursiva
-void quicksortHoare(int arr[], int inicio, int fim) {
+
+void quicksortHoare(int lista[], int inicio, int fim) {
     if (inicio < fim) {
-        // Obtém o índice de partição
-        int p = particionarHoare(arr, inicio, fim);
-
-        // Ordena a sublista à esquerda do pivô
-        quicksortHoare(arr, inicio, p);
-
-        // Ordena a sublista à direita do pivô
-        quicksortHoare(arr, p + 1, fim);
+        int posicao = particionarHoare(lista, inicio, fim);
+        quicksortHoare(lista, inicio, posicao);
+        quicksortHoare(lista, p + 1, fim);
     }
 }
 
-// Função para exibir o array
-void exibirArray(int arr[], int tamanho) {
+void exibirArray(int lista[], int tamanho) {
     for (int i = 0; i < tamanho; i++) {
-        printf("%d ", arr[i]);
+        printf("%d ", lista[i]);
     }
     printf("\n");
 }
 
-// Função principal
+
 int main() {
-    int arr[] = {10, 7, 8, 9, 1, 5}; // Array de exemplo
-    int n = sizeof(arr) / sizeof(arr[0]); // Calcula o tamanho do array
+    int lista[] = {10, 7, 8, 9, 1, 5}; 
+    int n = sizeof(lista) / sizeof(lista[0]); 
 
     printf("Array original: ");
-    exibirArray(arr, n);
+    exibirArray(lista, n);
 
-    // Chama o QuickSort para ordenar o array
-    quicksortHoare(arr, 0, n - 1);
+    quicksortHoare(lista, 0, n - 1);
 
     printf("Array ordenado: ");
-    exibirArray(arr, n);
+    exibirArray(lista, n);
 
     return 0;
 }
