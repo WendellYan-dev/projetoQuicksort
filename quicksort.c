@@ -334,40 +334,41 @@ int main() {
         //LOMUTO PADRÃO
         criarCopias(vetorOriginal, copias[0], tamanhoVetor);
         quicksortLomuto(copias[0], 0, tamanhoVetor - 1);
-        fprintf(saida, "LP %d\n", totalProcedimentos());
+        int somaLP = totalProcedimentos();
         trocasTotais = 0;
         chamadasTotais = 0;
 
         criarCopias(vetorOriginal, copias[1], tamanhoVetor);
         lomutoMed(copias[1], 0, tamanhoVetor - 1);
-        fprintf(saida, "LM %d\n", totalProcedimentos());
+        int somaLM = totalProcedimentos();
         trocasTotais = 0;
         chamadasTotais = 0;
 
         criarCopias(vetorOriginal, copias[2], tamanhoVetor);
         lomutoAleatorio(copias[2], 0, tamanhoVetor - 1);
-        fprintf(saida, "LA %d\n", totalProcedimentos());
+        int somaLA = totalProcedimentos();
         trocasTotais = 0;
         chamadasTotais = 0;
 
         criarCopias(vetorOriginal, copias[3], tamanhoVetor);
         quicksortHoare(copias[3], 0, tamanhoVetor - 1);
-        fprintf(saida, "HP %d\n", totalProcedimentos());
+        int somaHP = totalProcedimentos();
         trocasTotais = 0;
         chamadasTotais = 0;
 
         criarCopias(vetorOriginal, copias[4], tamanhoVetor);
         hoareMediana(copias[4], 0, tamanhoVetor - 1);
-        fprintf(saida, "HM %d\n", totalProcedimentos());
+        int somaHM = totalProcedimentos();
         trocasTotais = 0;
         chamadasTotais = 0;
 
         criarCopias(vetorOriginal, copias[5], tamanhoVetor);
         hoareAleatorio(copias[5], 0, tamanhoVetor - 1);
-        fprintf(saida, "HA %d\n", totalProcedimentos());
+        int somaHA = totalProcedimentos();
         trocasTotais = 0;
         chamadasTotais = 0;
         
+        fprintf(saida, "%d:N(%d),P(%d),LM(%d),LA(%d),HP(%d),HM(%d),HA(%d)\n",i,tamanhoVetor, somaLP, somaLM, somaLA, somaHP, somaHM, somaHA);
         free(vetorOriginal);
         for (int k = 0; k < 6; k++) {
             free(copias[k]);
