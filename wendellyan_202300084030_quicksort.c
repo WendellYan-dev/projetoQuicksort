@@ -5,6 +5,12 @@
 int trocasTotais = 0;
 int chamadasTotais = 0;
 
+//strcut guardará os valores das somas de trocas e chamadas e o nome de cada tipo de quicksort
+typedef struct {
+    int soma;
+    char tipoQuicksort[3];
+}Somatorio;
+
 //LOMUTO PADRÃO
 
 //no quicksort lomuto o pivo será o último índice da lista
@@ -291,6 +297,69 @@ void hoareAleatorio(int lista[], int inicio, int fim) {
     }
 }
 
+
+void mergeInt(Somatorio *lista, int inicio, int meio, int fim) {
+
+    int tamEsq = meio - inicio;
+    int tamDir = fim - meio;
+
+//alocação de memória dinâmica para vetores "temporários á esquerda e á direita" com o tamnnho pré-definido acima
+    Somatorio *listaEsq = (Somatorio *)malloc(tamEsq * sizeof(Somatorio));
+    Somatorio *listaDir = (Somatorio *)malloc(tamDir * sizeof(Somatorio));
+    if (listaEsq == NULL || listaDir == NULL) {
+    printf("ERRO\n");
+    return;
+    }
+
+
+    if (listaEsq != NULL && listaDir != NULL) {
+//lopp de preenchimento dos vetores temporários
+        for (int i = 0; i < tamEsq; i++) {
+            listaEsq[i] = lista[inicio + i];
+        }
+        for (int i = 0; i < tamDir; i++) {
+            listaDir[i] = lista[meio + i];
+        }
+
+        int i = 0, j = 0, k = inicio;
+
+//aqui é realizada a comparação entre os valores dos vetores temporários e a ordenação dos valores no vetor principal(essa ordenação é decrescente=condição verificada na linha 35)
+        while (i < tamEsq && j < tamDir) {
+            //a verificação se o código do container da lista temporária da direita é menor ao da lista temporária esquerda
+            if (listaEsq[i].soma <= listaDir[j].soma) {
+                //a função "stcrmp" retorna números positivos caso o da esquerda for maior que o da direitaa ou 0 se forem iguais
+                lista[k++] = listaEsq[i++];
+            } else {
+                lista[k++] = listaDir[j++];
+            }
+        }
+        
+//preenchendo o vetor principal com os valores restantes.Essa parte é importante pois, após a comparação, pode haver elementos sobrando nas duas metades. Como o código ancima já preencheu o vetor lista até o ponto em que uma das metades acabou, essa estrutura garante que qualquer valor restante na outra metade seja copiado para o vetor principal lista
+        while (i < tamEsq) {
+            lista[k++] = listaEsq[i++];
+        }
+        while (j < tamDir) {
+            lista[k++] = listaDir[j++];
+        }
+
+//liberando a memória dos vetores temporários
+        free(listaEsq);
+        free(listaDir);
+    } else {
+        printf("Erro ao alocar memória.\n");
+    }
+}
+
+void mergeSortInt(Somatorio *lista, int inicio, int fim) {
+    if (fim - inicio > 1) {
+        int meio = (inicio + fim) / 2;
+        mergeSortInt(lista, inicio, meio);
+        mergeSortInt(lista, meio, fim);
+        mergeInt(lista, inicio, meio, fim);
+    }
+}
+
+
 int totalProcedimentos() {
     return (trocasTotais + chamadasTotais);
 }
@@ -300,20 +369,20 @@ void criarCopias(int *origem,int *destino,int tamanho) {
 }
 
 
-int main() {
-    FILE* arquivo = fopen("input.txt", "r");
-    int numeroVetores, tamanhoVetor;
+int main(int argc, char *argv[]) {
+    FILE* arquivo = fopen(argv[1], "r");
     if (arquivo == NULL) {
         printf("ERRO\n");
         return 0;
     }
-    FILE* saida = fopen("output.txt", "w");
+    FILE* saida = fopen(argv[2], "w");
     if (saida == NULL) {
         printf("ERRO\n");
         return 0;
     }
 
 
+    int numeroVetores,tamanhoVetor;
     //leitura do número de vetores que estará na primeira linha do arquivo(especificado no slide)
     fscanf(arquivo, "%d", &numeroVetores);
 
@@ -367,8 +436,24 @@ int main() {
         int somaHA = totalProcedimentos();
         trocasTotais = 0;
         chamadasTotais = 0;
-        
-        fprintf(saida, "%d:N(%d),P(%d),LM(%d),LA(%d),HP(%d),HM(%d),HA(%d)\n",i,tamanhoVetor, somaLP, somaLM, somaLA, somaHP, somaHM, somaHA);
+
+        Somatorio listaSomatorio[6] = {
+            {somaLP, "LP"},
+            {somaLM, "LM"},
+            {somaLA, "LA"},
+            {somaHP, "HP"},
+            {somaHM, "HM"},
+            {somaHA, "HA"}
+        };
+        mergeSortInt(listaSomatorio,0,6);
+
+        fprintf(saida,"%d:N(%d),",i, tamanhoVetor);
+        for (int k = 0; k < 6; k++) {
+            fprintf(saida,"%s(%d)", listaSomatorio[k].tipoQuicksort, listaSomatorio[k].soma);
+            if (k < 5) fprintf(saida, ",");
+        }
+        fprintf(saida,"\n");
+
         free(vetorOriginal);
         for (int k = 0; k < 6; k++) {
             free(copias[k]);
