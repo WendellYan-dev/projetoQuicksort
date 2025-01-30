@@ -73,7 +73,7 @@ int mediana(int lista[],int inicio,int fim){
         return inicio+(tamanho/4);
     } else {
         return inicio+(tamanho/2);
-    }
+    }
 
 }
 
